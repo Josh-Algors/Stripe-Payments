@@ -24,24 +24,14 @@ class TestController extends Controller
 
     public function index()
     {
-        ini_set('memory_limit', '2048M');
         return view('auth.login');
     }  
       
     public function customLogin(Request $request)
     {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-   
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
-                        ->withSuccess('Signed in');
-        }
-  
-        return redirect("login")->withSuccess('Login details are not valid');
+        $validateLogin = $this->userRepository->validateUser($request);
+
+        return $validateLogin;
     }
 
     public function registration()
@@ -115,9 +105,9 @@ class TestController extends Controller
     }
 
     public function signOut() {
-        Session::flush();
-        Auth::logout();
+
+        $logout = $this->userRepository->signOut();
   
-        return Redirect('login');
+        return $logout;
     }
 }

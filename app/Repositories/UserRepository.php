@@ -46,8 +46,20 @@ class UserRepository
 
     }
 
-    public function validateUser(){
+    public function validateUser(Request $request){
 
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+   
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('dashboard')
+                        ->withSuccess('Signed in');
+        }
+  
+        return redirect("login")->withSuccess('Login details are not valid');
         if(Auth::check()){
 
             $user = Auth::user();
@@ -156,4 +168,13 @@ class UserRepository
         return $customer;
     }
 
+    public function signOut()
+    {
+        Session::flush();
+        Auth::logout();
+
+        return Redirect('login');
+    }
+
+    
 }
