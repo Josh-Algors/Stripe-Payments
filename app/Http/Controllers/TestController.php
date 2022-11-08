@@ -29,7 +29,7 @@ class TestController extends Controller
       
     public function customLogin(Request $request)
     {
-        $validateLogin = $this->userRepository->validateUser($request);
+        $validateLogin = $this->userRepository->login($request);
 
         return $validateLogin;
     }
