@@ -37,10 +37,12 @@ class UserRepository
            
         $data = $request->all();
         $check = $this->add($data);
-        // dd($check);
+        
         $user = User::where('email', $data['email'])->first();
+
+        //create stripe customer account
         $user->createAsStripeCustomer();
-        $user->createSetupIntent();
+        // $user->createSetupIntent();
          
         return redirect("dashboard")->withSuccess('You have signed-in');
 
